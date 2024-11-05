@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Bunny Game!!!</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f8ff;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .bunny {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: #ff69b4;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .carrot {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: orange;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: fall 3s infinite linear;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -30px;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        .score {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="bunny" id="bunny"></div>
+        <div class="carrot" id="carrot"></div>
+        <div class="score" id="score">Score: 0</div>
+    </div>
+
+    <script>
+        const bunny = document.getElementById("bunny");
+        const carrot = document.getElementById("carrot");
+        const scoreElement = document.getElementById("score");
+        let score = 0;
+
+        let bunnySpeed = 20;
+        let gameInterval;
+
+        function moveBunny(event) {
+            const bunnyRect = bunny.getBoundingClientRect();
+            const bunnyLeft = bunnyRect.left;
+            const bunnyRight = bunnyRect.right;
+
+            if (event.key === "ArrowLeft" && bunnyLeft > 0 + bunny.offsetWidth) {
+                bunny.style.left = (bunnyLeft - bunnySpeed) + "px";
+                console.log("left", bunnyLeft)
+            } else if (event.key === "ArrowRight" && bunnyRight < window.innerWidth - bunny.offsetWidth) {
+                bunny.style.left = (bunnyRight + bunnySpeed) + "px";
+                console.log("right", bunnyRight)
+            }
+        }
+
+        function checkCarrotCollision() {
+            const bunnyRect = bunny.getBoundingClientRect();
+            const carrotRect = carrot.getBoundingClientRect();
+
+            if (
+                bunnyRect.left < carrotRect.right &&
+                bunnyRect.right > carrotRect.left &&
+                bunnyRect.top < carrotRect.bottom &&
+                bunnyRect.bottom > carrotRect.top
+            ) {
+                score++;
+                scoreElement.innerText = `Score: ${score}`;
+                resetCarrot();
+            }
+        }
+
+        function resetCarrot() {
+            const randomX = Math.floor(Math.random() * (window.innerWidth - 30));
+            carrot.style.left = randomX + "px";
+            carrot.style.top = "0" + "px";
+            carrot.style.animation = "none"; // reset animation
+            setTimeout(() => {
+                carrot.style.animation = "fall 3s infinite linear";
+            }, 50);
+        }
+
+        document.addEventListener("keydown", moveBunny);
+
+        gameInterval = setInterval(checkCarrotCollision, 50);
+    </script>
+</body>
+</html>
