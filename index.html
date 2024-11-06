@@ -51,8 +51,14 @@
         let isGameOver = false;
         //const playSizeY = window.innerHeight;
         //const playSizeX = window.innerWidth;
-        const playSizeY = 615;
-        const playSizeX = 600;
+        let playSizeY = window.innerHeight;
+        let playSizeX = window.innerWidth;
+
+// Update every 100ms
+setInterval(() => {
+    playSizeY = window.innerHeight;
+    playSizeX = window.innerWidth;
+}, 100); // 100ms interval
 
       // Add new flags to track when buttons are held down
 let movingLeft = false;
@@ -80,7 +86,7 @@ function moveBunny() {
     }
     if (movingRight) {
         const currentLeft = bunny.offsetLeft;
-        if (currentLeft + bunnyWidth < 600) {
+        if (currentLeft + bunnyWidth < playSizeX) {
             bunny.style.left = (currentLeft + bunnySpeed) + "px";  // Move right
         }
     }
@@ -162,7 +168,7 @@ setInterval(moveBunny, 16);  // 60 frames per second
 
         // Start the carrot falling animation
         function startCarrotFall() {
-            carrot.style.top = "0px"; // Start from the top of the screen
+            carrot.style.top = window.innerHeight - 600 +"px"; // Start from the top of the screen
 
             carrotInterval = setInterval(() => {
                 const carrotTop = parseFloat(carrot.style.top); // Get the current top position of the carrot
@@ -191,7 +197,7 @@ setInterval(moveBunny, 16);  // 60 frames per second
             const maxX = playSizeX - carrot.offsetWidth - rightMargin;
             const randomX = Math.floor(Math.random() * (maxX - leftMargin)) + leftMargin;
             carrot.style.left = randomX + "px";
-            carrot.style.top = "0" + "px";  // Reset to top of the screen
+            carrot.style.top = window.innerHeight - 600 + "px";  // Reset to top of the screen
         }
 
         // End the game when misses >= 3

@@ -10,18 +10,17 @@ body {
     position: relative;
 }
 
-/* Game container */
+/* Make the game container responsive */
 .game-container {
     position: relative;
+    width: 100vw;  /* Full width of the viewport */
+    height: 90vh;  /* 90% of the height of the viewport */
+    margin: 0 auto;
+    overflow: hidden;
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 600px;   /* Fixed width */
-    height: 600px;  /* Fixed height */
-    overflow: hidden; /* Prevent content from overflowing */
+    align-items: flex-end;
 }
-
-
 
 .water-wave {
     position: absolute;
@@ -34,26 +33,25 @@ body {
     z-index: 1; /* Ensure it's placed below the game elements */
 }
 
-/* Bunny styling */
+/* Resize the bunny based on the container size */
 .bunny {
     position: absolute;
-    bottom: 20px;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%; /* More rounded bunny */
+    bottom: 0;
+    width: 22vw; /* 10% of the viewport width */
+    height: auto; /* Maintain aspect ratio */    
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
     transition: transform 0.3s ease-in-out;
 }
 
-/* Carrot styling */
+/* Resize the carrot based on the container size */
 .carrot {
     position: absolute;
-    width: 30px;
-    height: 30px;
     top: 0;
-    left: 50%;
+    width: 5vw; /* 5% of the viewport width */
     transform: translateX(-50%);
-    animation: fall 2s infinite linear; /* Animate the carrot falling */
+    left: 50%;
+    height: auto;
 }
 
 /* Score styling */
@@ -63,9 +61,21 @@ body {
     left: 10px;
     font-size: 28px; /* Larger for better visibility */
     font-weight: bold;
-    color: #ff6f61; /* Cute peachy color */
+    color: #ffa7c9; /* Cute peachy color */
     font-family: 'Comic Sans MS', 'Comic Sans', sans-serif; /* Playful font */
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    text-shadow: 2px 2px 8px rgba(255, 162, 216, 0.315); /* Soft shadow for depth */
+    padding: 10px 20px;
+}
+/* Misses styling */
+.misses {
+    position: fixed;
+    top: 50px;
+    left: 10px;
+    font-size: 28px; /* Same size for consistency */
+    font-weight: bold;
+    color: #ffa7c9; /* Soft pinkish red */
+    font-family: 'Comic Sans MS', 'Comic Sans', sans-serif; /* Playful font */
+    text-shadow: 2px 2px 8px rgba(255, 162, 216, 0.315); /* Soft shadow for depth */
     padding: 10px 20px;
 }
 .finalscoretext {
@@ -112,18 +122,7 @@ body {
     animation: glowPulse 2s infinite alternate, bounceEffect 1s ease-in-out infinite;
 }
 
-/* Misses styling */
-.misses {
-    position: fixed;
-    top: 50px;
-    left: 10px;
-    font-size: 28px; /* Same size for consistency */
-    font-weight: bold;
-    color: #f28d8d; /* Soft pinkish red */
-    font-family: 'Comic Sans MS', 'Comic Sans', sans-serif; /* Playful font */
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
-    padding: 10px 20px;
-}
+
 
 /* Start button styling */
 #start-button {
@@ -133,7 +132,7 @@ body {
     transform: translate(-50%, -50%);
     padding: 15px 30px;
     font-size: 18px;
-    background-color: #28a745;
+    background-color: #fca1ff;
     color: white;
     border: none;
     border-radius: 10px;
@@ -144,7 +143,7 @@ body {
 }
 
 #start-button:hover {
-    background-color: #218838;
+    background-color: #ffb0f8;
     transform: translate(-50%, -50%) scale(1.05); /* Slightly enlarge the button on hover */
 }
 
