@@ -89,8 +89,25 @@
 
     <button id="start-button">Start Game</button>
     <div class="finalscoretext" id="finalscoretext"></div>
+    <div class="best-score" id="best-score">Best Score: 0</div>
 
+    <div class="leaderboard" id="leaderboard">Current Leader: Not yet updated</div>
+    
     <script>
+    fetch('leaderboard.txt')  // Replace 'leaderboard.txt' with your file's URL
+        .then(response => response.text())  // Parse the response as text
+        .then(data => {
+            console.log(data); // Output file content to the console for debugging
+
+            // Update the leaderboard text with the file content
+            document.getElementById('leaderboard').innerText = data;
+        })
+        .catch(error => {
+            console.error('Error fetching the leaderboard file:', error);
+            alert('Failed to load leaderboard data!');
+        });
+
+
         const bunny = document.getElementById("bunny");
         const gameContainer = document.getElementById("game-container");
         const carrot = document.getElementById("carrot");
@@ -98,6 +115,18 @@
         const missesElement = document.getElementById("misses");
         const startButton = document.getElementById("start-button");
         const finalscoretext = document.getElementById("finalscoretext");
+        const bestScoreElement = document.getElementById("best-score"); // Get the best score element
+        let bestScore = localStorage.getItem("bestScore") ? parseInt(localStorage.getItem("bestScore")) : 0; // Get the best score from localStorage (default to 0 if not set)
+        bestScoreElement.innerText = `Best Score: ${bestScore}`; // Display the best score initially
+        // Function to update the best score in localStorage
+        function updateBestScore() {
+            if (score > bestScore) {
+                bestScore = score; // Update best score
+                bestScoreElement.innerText = `Best Score: ${bestScore}`; // Update the display
+                localStorage.setItem("bestScore", bestScore); // Save the new best score to localStorage
+            }
+        }
+
         let score = 0;
         let misses = 0;
         let startcarrotSpeed = 3; // Initial speed of the carrot falling
@@ -246,34 +275,35 @@ function createSparkle() {
             carrot.style.top = window.innerHeight - 600 + "px";  // Reset to top of the screen
         }
 
-        // End the game when misses >= 3
-        function endGame() {
-            isGameOver = true;
-            clearInterval(gameInterval);
-            clearInterval(carrotInterval);
-            scoreElement.innerText = `Game Over! Final Score: ${score}`;
-            finalscoretext.style.display = "block"; // Show the start button after 3 seconds
-            finalscoretext.innerText = `Final Score: ${score}`;
+// Modify endGame() to check and update best score
+function endGame() {
+    isGameOver = true;
+    clearInterval(gameInterval);
+    clearInterval(carrotInterval);
+    scoreElement.innerText = `Game Over! Final Score: ${score}`;
+    finalscoretext.style.display = "block"; // Show the final score text
+    finalscoretext.innerText = `Final Score: ${score}`;
 
-            setTimeout(() => {
-                startButton.style.display = "block"; // Show the start button after 3 seconds
-            }, 3000);  // 3000 milliseconds = 3 seconds       
-        }
+    updateBestScore(); // Update the best score when the game ends
 
-        // Start a new game
-        function startGame() {
-            score = 0;
-            misses = 0;
-            carrotSpeed = startcarrotSpeed;
-            isGameOver = false;
-            scoreElement.innerText = "Score: 0";
-            missesElement.innerText = "Misses: 0";
-            startButton.style.display = "none"; // Hide start button when game starts
-            finalscoretext.style.display = "none"; // Hide start button when game starts
-            resetCarrot();
-            startCarrotFall();
-            gameInterval = setInterval(checkCarrotCollision, 50);
-        }
+    setTimeout(() => {
+        startButton.style.display = "block"; // Show the start button after a few seconds
+    }, 3000);  // 3000 milliseconds = 3 seconds
+}
+       // Modify startGame() to reset the score
+function startGame() {
+    score = 0;
+    misses = 0;
+    carrotSpeed = startcarrotSpeed;
+    isGameOver = false;
+    scoreElement.innerText = "Score: 0";
+    missesElement.innerText = "Misses: 0";
+    startButton.style.display = "none"; // Hide start button when game starts
+    finalscoretext.style.display = "none"; // Hide final score text
+    resetCarrot();
+    startCarrotFall();
+    gameInterval = setInterval(checkCarrotCollision, 50);
+}
 
         // Event listeners
         startButton.addEventListener("click", startGame);
