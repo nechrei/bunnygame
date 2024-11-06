@@ -1,0 +1,222 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #f0f8ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Take the full viewport height */
+    width: 100vw; /* Take the full viewport width */
+    position: relative;
+}
+
+/* Game container */
+.game-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 600px;   /* Fixed width */
+    height: 600px;  /* Fixed height */
+    overflow: hidden; /* Prevent content from overflowing */
+}
+
+
+
+.water-wave {
+    position: absolute;
+    bottom: 0; /* Place at the bottom of the container */
+    width: 100%;
+    height: 20px; /* Adjust the height of the wave effect */
+    background-color: #36d0ff; /* Light blue color for the water */
+    background-image: url("https://www.transparenttextures.com/patterns/wet-snow.png");
+    background-repeat: repeat-x; /* Repeat the wave texture horizontally */
+    z-index: 1; /* Ensure it's placed below the game elements */
+}
+
+/* Bunny styling */
+.bunny {
+    position: absolute;
+    bottom: 20px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%; /* More rounded bunny */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Carrot styling */
+.carrot {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: fall 2s infinite linear; /* Animate the carrot falling */
+}
+
+/* Score styling */
+.score {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 28px; /* Larger for better visibility */
+    font-weight: bold;
+    color: #ff6f61; /* Cute peachy color */
+    font-family: 'Comic Sans MS', 'Comic Sans', sans-serif; /* Playful font */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    padding: 10px 20px;
+}
+.finalscoretext {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    font-size: 40px;
+    font-family: 'Comic Sans MS', 'Comic Sans', sans-serif; /* Fun playful font */
+    font-weight: bold;
+    color: #e6ff02;
+    background: linear-gradient(45deg, #ff6f61, #ffcc00, #00bcd4); /* Cool gradient */
+    background-clip: text;
+    -webkit-background-clip: text;
+    text-fill-color: transparent;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 217, 147, 0.8), 0 0 20px rgba(0, 255, 255, 0.6), 0 0 30px rgba(255, 0, 255, 0.6);
+    animation: glowPulse 2s infinite alternate; /* Pulse effect for glowing */
+    z-index: 9;
+}
+
+/* Add glowing pulsing animation */
+@keyframes glowPulse {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 220, 106, 0.8), 0 0 10px rgba(211, 247, 12, 0.952), 0 0 15px rgba(255, 0, 255, 0.6);
+    }
+    50% {
+        text-shadow: 0 0 20px rgb(255, 253, 218), 0 0 30px rgb(255, 254, 212), 0 0 40px rgba(255, 0, 255, 1);
+    }
+    100% {
+        text-shadow: 0 0 5px rgba(255, 237, 157, 0.8), 0 0 10px rgb(242, 255, 196), 0 0 15px rgba(255, 0, 255, 0.6);
+    }
+}
+
+/* Optional: Add a subtle bounce effect to make it pop */
+@keyframes bounceEffect {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.finalscoretext {
+    animation: glowPulse 2s infinite alternate, bounceEffect 1s ease-in-out infinite;
+}
+
+/* Misses styling */
+.misses {
+    position: fixed;
+    top: 50px;
+    left: 10px;
+    font-size: 28px; /* Same size for consistency */
+    font-weight: bold;
+    color: #f28d8d; /* Soft pinkish red */
+    font-family: 'Comic Sans MS', 'Comic Sans', sans-serif; /* Playful font */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    padding: 10px 20px;
+}
+
+/* Start button styling */
+#start-button {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 10;
+}
+
+#start-button:hover {
+    background-color: #218838;
+    transform: translate(-50%, -50%) scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+
+
+
+
+
+/* Left and right buttons */
+#left-button, #right-button {
+    position: fixed;
+    bottom: 20px;
+    padding: 20px;
+    font-size: 27px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Stylish text shadow */
+    background-color: rgba(0, 123, 255, 0.2); /* Softer blue with some transparency */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.2; /* Start with soft low opacity */
+    width: 50%;
+    height: 100vh;
+    transition: opacity 1s ease, transform 0.3s ease; /* Slower opacity transition */
+}
+
+#left-button {
+    left: 0;
+}
+
+#right-button {
+    right: 0;
+}
+
+/* Hover effects for left and right buttons */
+#left-button:hover, #right-button:hover {
+    animation: opacityIncrease 2s forwards; /* Gradually increase opacity on hover */
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+    background-color: rgba(0, 123, 255, 0.4); /* Softer color when hovered */
+}
+
+/* Keyframe animation for gradually increasing opacity */
+@keyframes opacityIncrease {
+    0% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0.4;
+    }
+}
+
+/* Fade out effect once the hover is removed (return to original opacity) */
+#left-button, #right-button {
+    transition: opacity 1s ease-out, transform 0.3s ease;
+}
+
+/* Optional: Keep the button slightly enlarged when hovering */
+#left-button:hover, #right-button:hover {
+    animation: opacityDecrease 3s forwards; /* Make opacity decrease after hover */
+}
+
+@keyframes opacityDecrease {
+    0% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 0.02;
+    }
+}

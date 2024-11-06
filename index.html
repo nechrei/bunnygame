@@ -4,97 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sweet Bunny Game!!!</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #f0f8ff;
-        }
-
-        .game-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-        }
-
-        .bunny {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 50px;
-            background-color: #ff69b4;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .carrot {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background-color: orange;
-            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: fall 3s infinite linear;
-        }
-
-        @keyframes fall {
-            0% {
-                top: -30px;
-            }
-            100% {
-                top: 100%;
-            }
-        }
-
-        .score {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            font-size: 24px;
-            color: #333;
-            font-family: Arial, sans-serif;
-        }
-
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="game-container">
-        <div class="bunny" id="bunny"></div>
-        <div class="carrot" id="carrot"></div>
+        <div class="bunny" id="bunny">
+            <img src="bunny.svg" id="bunny" class="bunny" alt="Bunny" />
+        </div>
+        <div class="carrot" id="carrot">
+            <img src="carrot.svg" alt="carrot" />
+        </div>
         <div class="score" id="score">Score: 0</div>
+        <div class="misses" id="misses">Misses: 0</div> <!-- Display misses -->
+        <div class="water-wave"></div> <!-- Optional wave effect -->
+    
+    
     </div>
+
+
+
+
+    <button id="start-button">Start Game</button>
+    <div  class="finalscoretext" id="finalscoretext"></div>
+
+    <!-- Movement buttons -->
+    <button id="left-button">Left</button>
+    <button id="right-button">Right</button>
 
     <script>
         const bunny = document.getElementById("bunny");
         const carrot = document.getElementById("carrot");
         const scoreElement = document.getElementById("score");
+        const missesElement = document.getElementById("misses");
+        const startButton = document.getElementById("start-button");
+        const leftButton = document.getElementById("left-button");
+        const rightButton = document.getElementById("right-button");
+        const finalscoretext = document.getElementById("finalscoretext");
         let score = 0;
-
+        let misses = 0;
+        let startcarrotSpeed = 3; // Initial speed of the carrot falling
+        let carrotSpeed = 1; // Initial speed of the carrot falling
+        let addcarrotSpeed = 0.04; // Initial speed of the carrot falling
         let bunnySpeed = 20;
         let gameInterval;
+        let carrotInterval;
+        let isGameOver = false;
+        //const playSizeY = window.innerHeight;
+        //const playSizeX = window.innerWidth;
+        const playSizeY = 615;
+        const playSizeX = 600;
 
-        function moveBunny(event) {
-            const bunnyRect = bunny.getBoundingClientRect();
-            const bunnyLeft = bunnyRect.left;
-            const bunnyRight = bunnyRect.right;
+      // Add new flags to track when buttons are held down
+let movingLeft = false;
+let movingRight = false;
 
-            if (event.key === "ArrowLeft" && bunnyLeft > 0 + bunny.offsetWidth) {
-                bunny.style.left = (bunnyLeft - bunnySpeed) + "px";
-                console.log("left", bunnyLeft)
-            } else if (event.key === "ArrowRight" && bunnyRight < window.innerWidth - bunny.offsetWidth) {
-                bunny.style.left = (bunnyRight + bunnySpeed) + "px";
-                console.log("right", bunnyRight)
-            }
+// Increase speed for sprinting (optional)
+let sprintSpeed = 30;
+
+// Modify moveBunny function to handle continuous movement
+function moveBunny() {
+    if (isGameOver) return;
+
+    const bunnyRect = bunny.getBoundingClientRect();
+    const containerRect = document.querySelector('.game-container').getBoundingClientRect();
+    
+    const bunnyWidth = bunnyRect.width;  // Get bunny's width
+    const bunnyHeight = bunnyRect.height;  // Get bunny's height
+
+    // Handle continuous movement while holding buttons
+    if (movingLeft) {
+        const currentLeft = bunny.offsetLeft;
+        if (currentLeft > 0) {
+            bunny.style.left = (currentLeft - bunnySpeed) + "px";  // Move left
         }
+    }
+    if (movingRight) {
+        const currentLeft = bunny.offsetLeft;
+        if (currentLeft + bunnyWidth < 600) {
+            bunny.style.left = (currentLeft + bunnySpeed) + "px";  // Move right
+        }
+    }
+}
 
+// Adjusted movement logic to handle holding the keys
+document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+        movingLeft = true;
+    } else if (event.key === "ArrowRight") {
+        movingRight = true;
+    }
+});
+
+document.addEventListener("keyup", (event) => {
+    if (event.key === "ArrowLeft") {
+        movingLeft = false;
+    } else if (event.key === "ArrowRight") {
+        movingRight = false;
+    }
+});
+
+// Adjust movement for left and right buttons (for touch/mouse events)
+leftButton.addEventListener("mousedown", () => {
+    movingLeft = true;
+});
+rightButton.addEventListener("mousedown", () => {
+    movingRight = true;
+});
+
+// Stop moving when buttons are released
+leftButton.addEventListener("mouseup", () => {
+    movingLeft = false;
+});
+rightButton.addEventListener("mouseup", () => {
+    movingRight = false;
+});
+
+// Add event listeners to handle the continuous movement for buttons
+leftButton.addEventListener("touchstart", () => {
+    movingLeft = true;
+});
+rightButton.addEventListener("touchstart", () => {
+    movingRight = true;
+});
+
+leftButton.addEventListener("touchend", () => {
+    movingLeft = false;
+});
+rightButton.addEventListener("touchend", () => {
+    movingRight = false;
+});
+
+// Keep calling moveBunny for continuous movement
+setInterval(moveBunny, 16);  // 60 frames per second
+
+
+
+        // Check if bunny collides with carrot
         function checkCarrotCollision() {
             const bunnyRect = bunny.getBoundingClientRect();
             const carrotRect = carrot.getBoundingClientRect();
-
             if (
                 bunnyRect.left < carrotRect.right &&
                 bunnyRect.right > carrotRect.left &&
@@ -104,22 +152,85 @@
                 score++;
                 scoreElement.innerText = `Score: ${score}`;
                 resetCarrot();
+                if (score % 1 === 0) {
+                    carrotSpeed += addcarrotSpeed; // Increase carrot speed as score increases
+                    clearInterval(carrotInterval);
+                    startCarrotFall();
+                }
             }
         }
 
-        function resetCarrot() {
-            const randomX = Math.floor(Math.random() * (window.innerWidth - 30));
-            carrot.style.left = randomX + "px";
-            carrot.style.top = "0" + "px";
-            carrot.style.animation = "none"; // reset animation
-            setTimeout(() => {
-                carrot.style.animation = "fall 3s infinite linear";
-            }, 50);
+        // Start the carrot falling animation
+        function startCarrotFall() {
+            carrot.style.top = "0px"; // Start from the top of the screen
+
+            carrotInterval = setInterval(() => {
+                const carrotTop = parseFloat(carrot.style.top); // Get the current top position of the carrot
+
+                if (carrotTop >= playSizeY) {  // If the carrot falls below the screen
+                    misses++;  // Increment misses if the carrot goes out of the screen
+                    missesElement.innerText = `Misses: ${misses}`;
+                    if (misses >= 3) {
+                        endGame();
+                    } else {
+                        resetCarrot();
+                    }
+                } else {
+                    carrot.style.top = (carrotTop + carrotSpeed) + "px"; // Move carrot down
+                }
+            }, 10);
         }
 
-        document.addEventListener("keydown", moveBunny);
+        // Reset the carrot to a random position at the top
+        function resetCarrot() {
+            const bunnyWidth = window.getComputedStyle(bunny).width;
+            const bunnyWidthNumber = parseFloat(bunnyWidth);
+            const halfBunnyWidth = bunnyWidthNumber / 2;
+            const leftMargin = halfBunnyWidth;
+            const rightMargin = halfBunnyWidth;
+            const maxX = playSizeX - carrot.offsetWidth - rightMargin;
+            const randomX = Math.floor(Math.random() * (maxX - leftMargin)) + leftMargin;
+            carrot.style.left = randomX + "px";
+            carrot.style.top = "0" + "px";  // Reset to top of the screen
+        }
 
-        gameInterval = setInterval(checkCarrotCollision, 50);
+        // End the game when misses >= 3
+        function endGame() {
+            isGameOver = true;
+            clearInterval(gameInterval);
+            clearInterval(carrotInterval);
+            scoreElement.innerText = `Game Over! Final Score: ${score}`;
+        finalscoretext.style.display = "block"; // Show the start button after 3 seconds
+        finalscoretext.innerText = score; // Show the start button after 3 seconds
+
+            setTimeout(() => {
+        startButton.style.display = "block"; // Show the start button after 3 seconds
+    }, 3000);  // 3000 milliseconds = 3 seconds       
+    }
+
+        // Start a new game
+        function startGame() {
+            score = 0;
+            misses = 0;
+            carrotSpeed = startcarrotSpeed;
+            isGameOver = false;
+            scoreElement.innerText = "Score: 0";
+            missesElement.innerText = "Misses: 0";
+            startButton.style.display = "none"; // Hide start button when game starts
+            finalscoretext.style.display = "none"; // Hide start button when game starts
+            resetCarrot();
+            startCarrotFall();
+            gameInterval = setInterval(checkCarrotCollision, 50);
+        }
+
+        // Event listeners
+        document.addEventListener("keydown", moveBunny);
+        startButton.addEventListener("click", startGame);
+        leftButton.addEventListener("click", moveBunny);
+        rightButton.addEventListener("click", moveBunny);
+
+        // Initially, don't start the game, just show the Start button
+        startButton.style.display = "block"; // Make sure it's visible initially
     </script>
 </body>
 </html>
