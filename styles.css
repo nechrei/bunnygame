@@ -45,7 +45,7 @@ z-index: -111;
     user-select: none;         /* Standard Syntax */
     bottom: 0;
     width: 22vw; /* 10% of the viewport width */
-    box-shadow: 0 0 20px rgba(253, 239, 161, 0.2);
+    box-shadow: 0 0 20px rgba(241, 223, 119, 0.2);
     border-radius: 50%;
     transition: transform 0.3s ease-in-out;
 }
