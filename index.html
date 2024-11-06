@@ -5,9 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sweet Bunny Game!!!</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+/* Updated CSS for Star-like Sparkles with Layers of Shine */
+.sparkle {
+    pointer-events: none;
+    position: absolute; -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;  
+    position: absolute;
+    width: 20px; /* Larger sparkle for more presence */
+    height: 20px;
+    border-radius: 50%;
+    opacity: 1;
+    pointer-events: none;
+    animation: sparkleAnimation 1.5s ease-out forwards;
+}
+
+/* Animation for the sparkle - add more twinkle and shine effects */
+@keyframes sparkleAnimation {
+    0% {
+        transform: scale(0) translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+    25% {
+        transform: scale(2) translate(var(--x-offset), var(--y-offset)) rotate(var(--rotation));
+        opacity: 0.9;
+    }
+    50% {
+        transform: scale(3) translate(var(--x-offset), var(--y-offset)) rotate(var(--rotation));
+        opacity: 0.7;
+    }
+    75% {
+        transform: scale(3.5) translate(var(--x-offset), var(--y-offset)) rotate(var(--rotation));
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(3.6) translate(var(--x-offset), var(--y-offset)) rotate(var(--rotation));
+        opacity: 0;
+    }
+}
+
+/* Random bright, saturated, and vibrant colors for the sparkles */
+.sparkle {
+    background-color: hsl(var(--hue), 100%, 75%); /* Bright, saturated color */
+}
+
+/* Add layers of glow and shine to make them look like twinkling stars */
+.sparkle {
+    box-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.7),     /* Inner glow (shimmer effect) */
+        0 0 20px rgba(255, 255, 255, 0.5),     /* Medium glow (soft shine) */
+        0 0 30px rgba(255, 255, 255, 0.3),     /* Outer glow (big shine) */
+        0 0 50px rgba(255, 255, 255, 0.2),     /* Extended shine (halo) */
+        0 0 80px rgba(255, 255, 255, 0.1);     /* Faint extended shine */
+}
+
+/* Optional: Add a slight blur to make the sparkle edges smoother and glowing */
+.sparkle {
+    filter: blur(3.5px); /* Soft blur to smooth edges */
+}
+
+/* Optional: Speed up the twinkle for extra shine */
+.sparkle {
+    animation-duration: 1.2s; /* Faster twinkle for more sparkle energy */
+}
+
+
+    </style>
 </head>
 <body>
-    <div class="game-container">
+    <div class="game-container" id="game-container">
         <div class="bunny" id="bunny">
             <img src="bunny.svg" id="bunny" class="bunny" alt="Bunny" />
         </div>
@@ -17,28 +85,18 @@
         <div class="score" id="score">Score: 0</div>
         <div class="misses" id="misses">Misses: 0</div> <!-- Display misses -->
         <div class="water-wave"></div> <!-- Optional wave effect -->
-    
-    
     </div>
 
-
-
-
     <button id="start-button">Start Game</button>
-    <div  class="finalscoretext" id="finalscoretext"></div>
-
-    <!-- Movement buttons -->
-    <button id="left-button">Left</button>
-    <button id="right-button">Right</button>
+    <div class="finalscoretext" id="finalscoretext"></div>
 
     <script>
         const bunny = document.getElementById("bunny");
+        const gameContainer = document.getElementById("game-container");
         const carrot = document.getElementById("carrot");
         const scoreElement = document.getElementById("score");
         const missesElement = document.getElementById("misses");
         const startButton = document.getElementById("start-button");
-        const leftButton = document.getElementById("left-button");
-        const rightButton = document.getElementById("right-button");
         const finalscoretext = document.getElementById("finalscoretext");
         let score = 0;
         let misses = 0;
@@ -49,101 +107,50 @@
         let gameInterval;
         let carrotInterval;
         let isGameOver = false;
-        //const playSizeY = window.innerHeight;
-        //const playSizeX = window.innerWidth;
         let playSizeY = window.innerHeight;
         let playSizeX = window.innerWidth;
 
-// Update every 100ms
-setInterval(() => {
-    playSizeY = window.innerHeight;
-    playSizeX = window.innerWidth;
-}, 100); // 100ms interval
+        setInterval(() => {
+            playSizeY = window.innerHeight;
+            playSizeX = window.innerWidth;
+        }, 100);
 
-      // Add new flags to track when buttons are held down
-let movingLeft = false;
-let movingRight = false;
-
-// Increase speed for sprinting (optional)
-let sprintSpeed = 30;
-
-// Modify moveBunny function to handle continuous movement
-function moveBunny() {
-    if (isGameOver) return;
-
-    const bunnyRect = bunny.getBoundingClientRect();
-    const containerRect = document.querySelector('.game-container').getBoundingClientRect();
-    
-    const bunnyWidth = bunnyRect.width;  // Get bunny's width
-    const bunnyHeight = bunnyRect.height;  // Get bunny's height
-
-    // Handle continuous movement while holding buttons
-    if (movingLeft) {
-        const currentLeft = bunny.offsetLeft;
-        if (currentLeft > 0) {
-            bunny.style.left = (currentLeft - bunnySpeed) + "px";  // Move left
+        // Move the bunny to the mouse/touch position
+        function moveBunnyToPosition(x) {
+            if (isGameOver) return;
+            // Ensure the bunny stays within bounds
+            const bunnyWidth = bunny.offsetWidth;
+            const leftPosition = Math.max(0, Math.min(x - bunnyWidth / 2, playSizeX - bunnyWidth)); // Snap bunny to touch/mouse position
+            bunny.style.left = leftPosition + "px";
         }
-    }
-    if (movingRight) {
-        const currentLeft = bunny.offsetLeft;
-        if (currentLeft + bunnyWidth < playSizeX) {
-            bunny.style.left = (currentLeft + bunnySpeed) + "px";  // Move right
+
+        // Mouse or touch start event
+        document.addEventListener("mousedown", (event) => {
+            moveBunnyToPosition(event.clientX);
+            document.addEventListener("mousemove", onMouseMove); // Track mouse move
+        });
+
+        document.addEventListener("touchstart", (event) => {
+            moveBunnyToPosition(event.touches[0].clientX);
+            document.addEventListener("touchmove", onTouchMove); // Track touch move
+        });
+
+        // Stop tracking when the mouse or touch ends
+        document.addEventListener("mouseup", () => {
+            document.removeEventListener("mousemove", onMouseMove);
+        });
+
+        document.addEventListener("touchend", () => {
+            document.removeEventListener("touchmove", onTouchMove);
+        });
+
+        function onMouseMove(event) {
+            moveBunnyToPosition(event.clientX);
         }
-    }
-}
 
-// Adjusted movement logic to handle holding the keys
-document.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft") {
-        movingLeft = true;
-    } else if (event.key === "ArrowRight") {
-        movingRight = true;
-    }
-});
-
-document.addEventListener("keyup", (event) => {
-    if (event.key === "ArrowLeft") {
-        movingLeft = false;
-    } else if (event.key === "ArrowRight") {
-        movingRight = false;
-    }
-});
-
-// Adjust movement for left and right buttons (for touch/mouse events)
-leftButton.addEventListener("mousedown", () => {
-    movingLeft = true;
-});
-rightButton.addEventListener("mousedown", () => {
-    movingRight = true;
-});
-
-// Stop moving when buttons are released
-leftButton.addEventListener("mouseup", () => {
-    movingLeft = false;
-});
-rightButton.addEventListener("mouseup", () => {
-    movingRight = false;
-});
-
-// Add event listeners to handle the continuous movement for buttons
-leftButton.addEventListener("touchstart", () => {
-    movingLeft = true;
-});
-rightButton.addEventListener("touchstart", () => {
-    movingRight = true;
-});
-
-leftButton.addEventListener("touchend", () => {
-    movingLeft = false;
-});
-rightButton.addEventListener("touchend", () => {
-    movingRight = false;
-});
-
-// Keep calling moveBunny for continuous movement
-setInterval(moveBunny, 16);  // 60 frames per second
-
-
+        function onTouchMove(event) {
+            moveBunnyToPosition(event.touches[0].clientX);
+        }
 
         // Check if bunny collides with carrot
         function checkCarrotCollision() {
@@ -152,11 +159,12 @@ setInterval(moveBunny, 16);  // 60 frames per second
             if (
                 bunnyRect.left < carrotRect.right &&
                 bunnyRect.right > carrotRect.left &&
-                bunnyRect.top < carrotRect.bottom &&
+                playSizeY - bunnyRect.width /1.24 < carrotRect.bottom &&
                 bunnyRect.bottom > carrotRect.top
             ) {
                 score++;
                 scoreElement.innerText = `Score: ${score}`;
+                createSparkle(); // Create sparkle effect when bunny catches carrot
                 resetCarrot();
                 if (score % 1 === 0) {
                     carrotSpeed += addcarrotSpeed; // Increase carrot speed as score increases
@@ -166,9 +174,52 @@ setInterval(moveBunny, 16);  // 60 frames per second
             }
         }
 
+        // Create the sparkle effect
+        // Create the multi-sparkle effect
+// Create the updated sparkle effect with more randomness
+function createSparkle() {
+    const numSparkles = 2; // Increase the number of sparkles per catch
+    const bunnyRect = bunny.getBoundingClientRect();
+
+    for (let i = 0; i < numSparkles; i++) {
+        const sparkle = document.createElement("div");
+        sparkle.classList.add("sparkle");
+
+        // Randomize sizes of sparkles (between 5px to 20px)
+        const size = Math.random() * 15 + 5;
+        sparkle.style.width = `${size}px`;
+        sparkle.style.height = `${size}px`;
+
+        // Randomize offsets for each sparkle
+        const offsetX = Math.random() * 150 - 75; // Random X offset between -150px and 150px
+        const offsetY = Math.random() * - 66; // Random Y offset between -150px and 150px
+        const rotation = Math.random() * 360; // Random rotation (0 to 360 degrees)
+
+        sparkle.style.setProperty('--x-offset', `${offsetX}px`);
+        sparkle.style.setProperty('--y-offset', `${offsetY}px`);
+        sparkle.style.setProperty('--rotation', `${rotation}deg`);
+
+        // Random color (using HSL for pastel/bright range)
+        const hue = Math.random() * 360; // Random hue for each sparkle (0 to 360)
+        sparkle.style.setProperty('--hue', hue);
+
+         // Position the sparkles around the bunny
+         sparkle.style.left = bunnyRect.left + bunnyRect.width / 2 - 5 + "px";  // Center sparkle on the bunny
+        sparkle.style.bottom = bunnyRect.width /2 + "px"; // Below the bunny
+
+        gameContainer.appendChild(sparkle);
+
+        // Remove the sparkle after the animation ends (1.5s)
+        setTimeout(() => {
+            sparkle.remove();
+        }, 1500); // Match the animation duration
+    }
+}
+
+
         // Start the carrot falling animation
         function startCarrotFall() {
-            carrot.style.top = window.innerHeight - 600 +"px"; // Start from the top of the screen
+            carrot.style.top = window.innerHeight - 600 + "px"; // Start from the top of the screen
 
             carrotInterval = setInterval(() => {
                 const carrotTop = parseFloat(carrot.style.top); // Get the current top position of the carrot
@@ -189,13 +240,8 @@ setInterval(moveBunny, 16);  // 60 frames per second
 
         // Reset the carrot to a random position at the top
         function resetCarrot() {
-            const bunnyWidth = window.getComputedStyle(bunny).width;
-            const bunnyWidthNumber = parseFloat(bunnyWidth);
-            const halfBunnyWidth = bunnyWidthNumber / 2;
-            const leftMargin = halfBunnyWidth;
-            const rightMargin = halfBunnyWidth;
-            const maxX = playSizeX - carrot.offsetWidth - rightMargin;
-            const randomX = Math.floor(Math.random() * (maxX - leftMargin)) + leftMargin;
+            const maxX = playSizeX - carrot.offsetWidth;
+            const randomX = Math.floor(Math.random() * maxX);
             carrot.style.left = randomX + "px";
             carrot.style.top = window.innerHeight - 600 + "px";  // Reset to top of the screen
         }
@@ -206,13 +252,13 @@ setInterval(moveBunny, 16);  // 60 frames per second
             clearInterval(gameInterval);
             clearInterval(carrotInterval);
             scoreElement.innerText = `Game Over! Final Score: ${score}`;
-        finalscoretext.style.display = "block"; // Show the start button after 3 seconds
-        finalscoretext.innerText = score; // Show the start button after 3 seconds
+            finalscoretext.style.display = "block"; // Show the start button after 3 seconds
+            finalscoretext.innerText = `Final Score: ${score}`;
 
             setTimeout(() => {
-        startButton.style.display = "block"; // Show the start button after 3 seconds
-    }, 3000);  // 3000 milliseconds = 3 seconds       
-    }
+                startButton.style.display = "block"; // Show the start button after 3 seconds
+            }, 3000);  // 3000 milliseconds = 3 seconds       
+        }
 
         // Start a new game
         function startGame() {
@@ -230,10 +276,7 @@ setInterval(moveBunny, 16);  // 60 frames per second
         }
 
         // Event listeners
-        document.addEventListener("keydown", moveBunny);
         startButton.addEventListener("click", startGame);
-        leftButton.addEventListener("click", moveBunny);
-        rightButton.addEventListener("click", moveBunny);
 
         // Initially, don't start the game, just show the Start button
         startButton.style.display = "block"; // Make sure it's visible initially
