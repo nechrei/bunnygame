@@ -89,6 +89,7 @@
 
     <button id="start-button">Start Game</button>
     <div class="finalscoretext" id="finalscoretext"></div>
+    <div class="newrecordtext" id="newrecordtext">New record!</div>
     <div class="best-score" id="best-score">Best Score: 0</div>
 
     <div class="leaderboard" id="leaderboard">Current Leader: Not yet updated</div>
@@ -279,6 +280,8 @@ function createSparkle() {
                         const negativeBeeps = document.getElementById("negative-beeps");
                         const doneFinishedSound = document.getElementById("DoneFinishedSound");
                         if (score > bestScore) {
+                            const newRecordText = document.getElementById("newrecordtext");
+                            newRecordText.style.display = "block";  // Show the "New record!" message
                             // If score is greater than best score, play the "DoneFinishedSound"
                             if (doneFinishedSound.paused || doneFinishedSound.ended) {
                                 doneFinishedSound.play(); // Play the "DoneFinishedSound" sound
@@ -343,7 +346,9 @@ function endGame() {
 }
        // Modify startGame() to reset the score
 function startGame() {
-    score = 0;
+    const newRecordText = document.getElementById("newrecordtext");
+    newRecordText.style.display = "none";  // Show the "New record!" message
+    score = 264;
     misses = 0;
     carrotSpeed = startcarrotSpeed;
     isGameOver = false;

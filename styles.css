@@ -99,6 +99,31 @@ z-index: -111;
     text-shadow: 2px 2px 8px rgba(255, 162, 216, 0.315); /* Soft shadow for depth */
     padding: 10px 20px;
 }
+.newrecordtext{
+    display: none;
+    position: fixed;    pointer-events: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;         /* Standard Syntax */
+    position: absolute;
+    top: 38.8%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    font-size: 15px;
+    font-family: 'Comic Sans MS', 'Comic Sans', sans-serif; /* Fun playful font */
+    font-weight: bold;
+    color: #ff4646f5;
+    background: linear-gradient(45deg, #ff6f61, #ffcc00, #00bcd4); /* Cool gradient */
+    background-clip: text;
+    -webkit-background-clip: text;
+    text-fill-color: transparent;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 217, 147, 0.8), 0 0 20px rgba(0, 255, 255, 0.6), 0 0 30px rgba(255, 0, 255, 0.6);
+    animation: glowPulse2 2s infinite alternate; /* Pulse effect for glowing */
+    z-index: 9;
+}
 .finalscoretext {
     position: fixed;    pointer-events: none;
     -webkit-user-select: none; /* Safari */
@@ -159,6 +184,16 @@ z-index: -111;
     text-shadow: 2px 2px 8px rgba(255, 162, 216, 0.315); /* Soft shadow for depth */
 }
 /* Media query for devices with smaller screen widths */
+@media (max-width: 870px) {
+    
+    .newrecordtext{
+        top: 28%;
+    } 
+    .finalscoretext{
+        top: 40.3%;
+    }
+}
+/* Media query for devices with smaller screen widths */
 @media (max-width: 600px) {
     .score, .misses, .best-score {
         font-size: 21px; /* Smaller font size on smaller screens */
@@ -172,6 +207,12 @@ z-index: -111;
     .best-score {
     top: 70px; /* Adjust position for smaller screens */
     }
+    .newrecordtext{
+        top: 21%;
+    } 
+    .finalscoretext{
+        top: 36.3%;
+    }
 }
 
 @media (max-width: 400px) {
@@ -181,7 +222,12 @@ z-index: -111;
     .score{
         top: 0px;
     }
-
+    .newrecordtext{
+        top: 20%;
+    }
+    .finalscoretext{
+        top: 37%;
+    }
 
     .misses{
         top: 25px;
@@ -204,19 +250,37 @@ z-index: -111;
         text-shadow: 0 0 5px rgba(255, 237, 157, 0.8), 0 0 10px rgb(242, 255, 196), 0 0 15px rgba(255, 188, 255, 0.6);
     }
 }
+@keyframes glowPulse2 {
+    0% {
+        text-shadow: 0 0 5px rgba(243, 224, 50, 0.8), 0 0 10px rgba(255, 190, 171, 0.952), 0 0 15px rgba(255, 170, 148, 0.6);
+    }
+    50% {
+        text-shadow: 0 0 20px rgb(255, 235, 218), 0 0 30px rgb(255, 217, 212), 0 0 40px rgb(255, 227, 133);
+    }
+    100% {
 
+        text-shadow: 0 0 5px rgba(255, 242, 66, 0.8), 0 0 10px rgb(255, 213, 196), 0 0 15px rgba(255, 188, 255, 0.6);
+    }
+}
 /* Optional: Add a subtle bounce effect to make it pop */
 @keyframes bounceEffect {
     0% { transform: translate(-50%, -50%) scale(1); }
     50% { transform: translate(-50%, -50%) scale(1.1); }
     100% { transform: translate(-50%, -50%) scale(1); }
 }
-
+/* Optional: Add a subtle bounce effect to make it pop */
+@keyframes bounceEffect2 {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.2); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
 .finalscoretext {
     animation: glowPulse 2s infinite alternate, bounceEffect 1s ease-in-out infinite;
 }
 
-
+.newrecordtext {
+    animation: glowPulse 2s infinite alternate, bounceEffect2 3s ease-in-out infinite;
+}
 
 /* Start button styling */
 #start-button {
