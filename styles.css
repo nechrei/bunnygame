@@ -22,7 +22,7 @@ body {
     /* Add a cute, soft box shadow */
 z-index: -111;
     /* Optional: Add a subtle inner shadow for extra depth */
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 234, 177, 0.185));  /* Soft background gradient */
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(156, 216, 240, 0.185));  /* Soft background gradient */
 }
 
 .water-wave {
