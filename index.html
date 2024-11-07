@@ -212,6 +212,10 @@ if (carrotSound.paused || carrotSound.ended) {
     carrotSound.onended = () => {
         carrotSound.currentTime = 0; // Reset the sound to the beginning if needed
     };
+} else {
+    carrotSound.pause();           // Stop the sound if it's currently playing
+    carrotSound.currentTime = 0;   // Reset the playback time to the start
+    carrotSound.play();            // Play the sound again
 }
 
                 if (score % 1 === 0) {
@@ -288,6 +292,10 @@ function createSparkle() {
                                 doneFinishedSound.onended = () => {
                                     doneFinishedSound.currentTime = 0; // Reset for future plays
                                 };
+                            } else {
+                                doneFinishedSound.pause();           // Stop the sound if it's currently playing
+                                doneFinishedSound.currentTime = 0;   // Reset the playback time to the start
+                                doneFinishedSound.play();            // Play the sound again
                             }
                         } else {
                             // If score is less than or equal to the best score, play the "negative-beeps" sound
@@ -295,7 +303,11 @@ function createSparkle() {
                                 negativeBeeps.play(); // Play the "negative-beeps" sound
                                 negativeBeeps.onended = () => {
                                     negativeBeeps.currentTime = 0; // Reset for future plays
-                                };
+                                                            };
+                            } else {
+                                negativeBeeps.pause();           // Stop the sound if it's currently playing
+                                negativeBeeps.currentTime = 0;   // Reset the playback time to the start
+                                negativeBeeps.play();            // Play the sound again
                             }
                         }
                         endGame();
@@ -312,6 +324,10 @@ if (swoshSound.paused || swoshSound.ended) {
     swoshSound.onended = () => {
         swoshSound.currentTime = 0; // Ensure the sound is ready for the next time
     };
+} else {
+    swoshSound.pause();           // Stop the sound if it's currently playing
+    swoshSound.currentTime = 0;   // Reset the playback time to the start
+    swoshSound.play();            // Play the sound again
 }
                     }
                 } else {
@@ -370,7 +386,11 @@ function startGame() {
         gameStart.onended = () => {
             gameStart.currentTime = 0; // Ensure the sound is ready for the next time
         };
-    }
+    } else {
+        gameStart.pause();           // Stop the sound if it's currently playing
+        gameStart.currentTime = 0;   // Reset the playback time to the start
+        gameStart.play();            // Play the sound again
+}
 }
 
         // Event listeners
