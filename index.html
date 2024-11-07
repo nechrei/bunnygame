@@ -281,54 +281,25 @@ function createSparkle() {
                     missesElement.innerText = `Misses: ${misses}`;
                     if (misses >= 3) {
                         
-                        const negativeBeeps = document.getElementById("negative-beeps");
-                        const doneFinishedSound = document.getElementById("DoneFinishedSound");
-                        if (score > bestScore) {
-                            const newRecordText = document.getElementById("newrecordtext");
-                            newRecordText.style.display = "block";  // Show the "New record!" message
-                            // If score is greater than best score, play the "DoneFinishedSound"
-                            if (doneFinishedSound.paused || doneFinishedSound.ended) {
-                                doneFinishedSound.play(); // Play the "DoneFinishedSound" sound
-                                doneFinishedSound.onended = () => {
-                                    doneFinishedSound.currentTime = 0; // Reset for future plays
-                                };
-                            } else {
-                                doneFinishedSound.pause();           // Stop the sound if it's currently playing
-                                doneFinishedSound.currentTime = 0;   // Reset the playback time to the start
-                                doneFinishedSound.play();            // Play the sound again
-                            }
-                        } else {
-                            // If score is less than or equal to the best score, play the "negative-beeps" sound
-                            if (negativeBeeps.paused || negativeBeeps.ended) {
-                                negativeBeeps.play(); // Play the "negative-beeps" sound
-                                negativeBeeps.onended = () => {
-                                    negativeBeeps.currentTime = 0; // Reset for future plays
-                                                            };
-                            } else {
-                                negativeBeeps.pause();           // Stop the sound if it's currently playing
-                                negativeBeeps.currentTime = 0;   // Reset the playback time to the start
-                                negativeBeeps.play();            // Play the sound again
-                            }
-                        }
                         endGame();
                     } else {
                         resetCarrot();
                          // Play the swosh sound when the carrot is missed, and wait for it to finish
-            const swoshSound = document.getElementById("swosh-sound");
+                        const swoshSound = document.getElementById("swosh-sound");
 
-// Check if the sound is already playing
-if (swoshSound.paused || swoshSound.ended) {
-    swoshSound.play();  // Play the sound if it's not already playing
+                        // Check if the sound is already playing
+                        if (swoshSound.paused || swoshSound.ended) {
+                            swoshSound.play();  // Play the sound if it's not already playing
 
-    // Reset the sound to the beginning once it's finished
-    swoshSound.onended = () => {
-        swoshSound.currentTime = 0; // Ensure the sound is ready for the next time
-    };
-} else {
-    swoshSound.pause();           // Stop the sound if it's currently playing
-    swoshSound.currentTime = 0;   // Reset the playback time to the start
-    swoshSound.play();            // Play the sound again
-}
+                            // Reset the sound to the beginning once it's finished
+                            swoshSound.onended = () => {
+                                swoshSound.currentTime = 0; // Ensure the sound is ready for the next time
+                            };
+                        } else {
+                            swoshSound.pause();           // Stop the sound if it's currently playing
+                            swoshSound.currentTime = 0;   // Reset the playback time to the start
+                            swoshSound.play();            // Play the sound again
+                        }
                     }
                 } else {
                     carrot.style.top = (carrotTop + carrotSpeed) + "px"; // Move carrot down
@@ -347,6 +318,36 @@ if (swoshSound.paused || swoshSound.ended) {
 
 // Modify endGame() to check and update best score
 function endGame() {
+    const negativeBeeps = document.getElementById("negative-beeps");
+    const doneFinishedSound = document.getElementById("DoneFinishedSound");
+    if (score > bestScore) {
+        const newRecordText = document.getElementById("newrecordtext");
+        newRecordText.style.display = "block";  // Show the "New record!" message
+        // If score is greater than best score, play the "DoneFinishedSound"
+        if (doneFinishedSound.paused || doneFinishedSound.ended) {
+            doneFinishedSound.play(); // Play the "DoneFinishedSound" sound
+            doneFinishedSound.onended = () => {
+                doneFinishedSound.currentTime = 0; // Reset for future plays
+            };
+        } else {
+            doneFinishedSound.pause();           // Stop the sound if it's currently playing
+            doneFinishedSound.currentTime = 0;   // Reset the playback time to the start
+            doneFinishedSound.play();            // Play the sound again
+        }
+    } else {
+        // If score is less than or equal to the best score, play the "negative-beeps" sound
+        if (negativeBeeps.paused || negativeBeeps.ended) {
+            negativeBeeps.play(); // Play the "negative-beeps" sound
+            negativeBeeps.onended = () => {
+                negativeBeeps.currentTime = 0; // Reset for future plays
+                                        };
+        } else {
+            negativeBeeps.pause();           // Stop the sound if it's currently playing
+            negativeBeeps.currentTime = 0;   // Reset the playback time to the start
+            negativeBeeps.play();            // Play the sound again
+        }
+    }
+
     isGameOver = true;
     clearInterval(gameInterval);
     clearInterval(carrotInterval);
