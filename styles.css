@@ -145,7 +145,7 @@ z-index: -111;
     text-fill-color: transparent;
     letter-spacing: 2px;
     text-shadow: 0 0 10px rgba(255, 217, 147, 0.8), 0 0 20px rgba(255, 199, 166, 0.6), 0 0 30px rgba(177, 174, 138, 0.6);
-    animation: glowPulse 2s infinite alternate; /* Pulse effect for glowing */
+    animation: glowPulse 4s infinite alternate; /* Pulse effect for glowing */
     z-index: 9;
 }
 .best-score{
@@ -241,13 +241,25 @@ z-index: -111;
 /* Add glowing pulsing animation */
 @keyframes glowPulse {
     0% {
-        text-shadow: 0 0 5px rgba(255, 220, 106, 0.8), 0 0 10px rgba(211, 247, 12, 0.952), 0 0 15px rgba(228, 255, 108, 0.6);
+        text-shadow: 0 0 1px rgba(255, 220, 106, 0.8), 0 0 3px rgba(211, 247, 12, 0.952), 0 0 5px rgba(241, 255, 177, 0.6);
+        text-shadow: 2px 2px 0px rgba(255, 228, 155, 0.75); 
+
     }
-    50% {
-        text-shadow: 0 0 20px rgb(255, 253, 218), 0 0 30px rgb(255, 254, 212), 0 0 40px rgb(195, 236, 11);
+    42% {
+        text-shadow: 0 0 3px rgba(255, 220, 106, 0.8), 0 0 5px rgba(211, 247, 12, 0.952), 0 0 6px rgba(241, 255, 177, 0.6);
+        text-shadow: 2px 2px 0px rgba(255, 228, 155, 0.75); 
+    }
+    52% {
+        text-shadow: 0 0 1px rgb(255, 253, 218), 0 0 22px rgb(255, 254, 212), 0 0 10px rgb(195, 236, 11);
+        text-shadow: 2px 2px 0px rgba(255, 228, 155, 0.75); 
+    }
+    77% {
+        text-shadow: 0 0 2px rgba(255, 220, 106, 0.8), 0 0 3px rgba(211, 247, 12, 0.952), 0 0 5px rgba(241, 255, 177, 0.6);
+        text-shadow: 2px 2px 0px rgba(255, 228, 155, 0.75); 
     }
     100% {
-        text-shadow: 0 0 5px rgba(255, 237, 157, 0.8), 0 0 10px rgb(242, 255, 196), 0 0 15px rgba(255, 225, 93, 0.6);
+        text-shadow: 0 0 1px rgba(255, 237, 157, 0.8), 0 0 3px rgb(242, 255, 196), 0 0 15px rgba(255, 242, 184, 0.6);
+        text-shadow: 2px 2px 0px rgba(255, 228, 155, 0.75); 
     }
 }
 @keyframes glowPulse2 {
